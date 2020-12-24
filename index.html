@@ -1,0 +1,86 @@
+<!doctype html>
+<html ng-app="buyApp">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            font-size: 1.9em;
+            padding-top: 50px;
+        }
+
+        .bought {
+            width: 45vw;
+            height: 50vh;
+            border: 3px #dedede dashed;
+            margin: auto;
+            text-align: center;
+        }
+
+        .toBuy {
+            width: 45vw;
+            height: 50vh;
+            border: 3px #dedede dashed;
+            text-align: center;
+            margin: auto;
+        }
+
+        .header {
+            font-size: 20px;
+            margin: 20px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div ng-controller="toBuy" class="toBuy">
+        <div class="header">Потрібно купити:</div>
+        <p ng-repeat="item in data.toBuy">
+            Купити: {{item.amount}} {{item.name}}
+            <button ng-click="buy(item.id)" class="btn btn-warning">Куплено</button>
+        </p>
+        <div ng-if="data.toBuy.length==0">
+            <p>Усе куплено</p>
+        </div>
+    </div>
+
+
+    <div ng-controller="bought" class="bought">
+        <div class="header">Вже куплено:</div>
+        <p ng-repeat="item in data.bougth">
+            Куплено: {{item.amount}} {{item.name}}
+        </p>
+        <div ng-if="data.bougth.length==0">
+            <p> Ще нічого не куплено</p>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <script>
+        const model = {
+            toBuy: [
+                { name: "Яблук", amount: 5, id: 1 },
+                { name: "Груш", amount: 10, id: 2 },
+                { name: "Помідор", amount: 30, id: 3 },
+                { name: "Огірків", amount: 12, id: 4 },
+                { name: "Кукурудзи", amount: 4, id: 5 }
+            ],
+            bougth: []
+        };
+        const buyApp = angular.module("buyApp", []);
+        buyApp.controller("toBuy", function ($scope) {
+            $scope.data = model;
+            $scope.buy = function (id) {
+                $scope.data.bougth.push($scope.data.toBuy.find(item => item.id == id))  
+                $scope.data.toBuy.splice($scope.data.toBuy.indexOf($scope.data.toBuy.find(item => item.id == id)), 1)
+            }
+        });
+        buyApp.controller("bought", function ($scope) {
+            $scope.data = model;
+        });
+    </script>
+</body>
+
+</html>
